@@ -19,7 +19,9 @@ async function run() {
     // all collection 
     const toolsCollection = client.db('toolsManufacturer').collection('tools');
     const orderCollection = client.db('toolsManufacturer').collection('orders');
+    const reviewCollection = client.db('toolsManufacturer').collection('reviews');
 
+    // tools api 
     app.get('/tools', async (req, res) => {
       const query = {};
       const result = await toolsCollection.find(query).toArray();
@@ -32,6 +34,8 @@ async function run() {
       res.send(result)
     })
 
+
+    // orders api 
     app.post('/orders', async (req, res) => {
       const orders = req.body;
       const result = await orderCollection.insertOne(orders);
@@ -41,6 +45,21 @@ async function run() {
       const email = req.query.email;
       const query = { email: email };
       const cursor = orderCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+
+    // review api 
+    app.post('/review', async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    })
+    app.get('/review', async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const cursor = reviewCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     })
