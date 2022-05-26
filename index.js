@@ -45,10 +45,17 @@ async function run() {
     })
     app.get('/orders', async (req, res) => {
       const email = req.query.email;
-      const query = { email: email };
-      const cursor = orderCollection.find(query);
-      const result = await cursor.toArray();
-      res.send(result);
+      if (email) {
+        const query = { email: email };
+        const cursor = orderCollection.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      }
+      else {
+        const query = {};
+        const result = await orderCollection.find(query).toArray();
+        res.send(result)
+      }
     })
 
 
@@ -74,13 +81,21 @@ async function run() {
 
     app.put('/user/admin/:email', async (req, res) => {
       const email = req.params.email;
-        const filter = { email: email };
-        const updateDoc = {
-          $set: { role: 'admin' },
-        };
-        const result = await userCollection.updateOne(filter, updateDoc);
-        res.send(result);
+      const filter = { email: email };
+      const updateDoc = {
+        $set: { role: 'admin' },
+      };
+      const result = await userCollection.updateOne(filter, updateDoc);
+      res.send(result);
     })
+
+    app.get('/admin/:email', async (req, res) => {
+      const email = req.params.email;
+      const user = await userCollection.findOne({ email: email });
+      const isAdmin = user.role === 'admin';
+      res.send({ admin: isAdmin })
+    })
+
     app.put('/user/:email', async (req, res) => {
       const email = req.params.email;
       const user = req.body;
@@ -95,7 +110,7 @@ async function run() {
     })
 
 
-    
+
   }
   finally {
 
