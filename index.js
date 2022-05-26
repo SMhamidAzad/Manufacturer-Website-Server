@@ -29,6 +29,13 @@ async function run() {
       const result = await toolsCollection.find(query).toArray();
       res.send(result)
     })
+
+    app.post('/tools', async (req, res) => {
+      const tools = req.body;
+      const result = await toolsCollection.insertOne(tools);
+      res.send(result);
+    })
+
     app.get('/tools/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
