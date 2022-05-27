@@ -22,6 +22,7 @@ async function run() {
     const orderCollection = client.db('toolsManufacturer').collection('orders');
     const reviewCollection = client.db('toolsManufacturer').collection('reviews');
     const userCollection = client.db('toolsManufacturer').collection('users');
+    const profileCollection = client.db('toolsManufacturer').collection('profile');
 
     // tools api 
     app.get('/tools', async (req, res) => {
@@ -73,11 +74,9 @@ async function run() {
       res.send(result);
     })
     app.get('/review', async (req, res) => {
-      const email = req.query.email;
-      const query = { email: email };
-      const cursor = reviewCollection.find(query);
-      const result = await cursor.toArray();
-      res.send(result);
+      const query = {};
+      const result = await reviewCollection.find(query).toArray();
+      res.send(result)
     })
 
     app.get('/user', async (req, res) => {
@@ -116,6 +115,18 @@ async function run() {
       res.send({ result, token });
     })
 
+    app.post('/profile', async (req, res) => {
+      const profile = req.body;
+      const result = await profileCollection.insertOne(profile);
+      res.send(result);
+    })
+    app.get('/profile', async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const cursor = profileCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
 
 
   }
