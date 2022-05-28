@@ -43,6 +43,12 @@ async function run() {
       const result = await toolsCollection.findOne(query);
       res.send(result)
     })
+    app.delete('/tools/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await toolsCollection.deleteOne(query);
+      res.send(result);
+    });
 
 
     // orders api 
@@ -142,3 +148,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+
